@@ -82,14 +82,41 @@ This is a RESTful API service built with Flask that provides authenticated acces
 - PostgreSQL connection with connection pooling
 - Health check endpoint for monitoring database connectivity
 
+### Docker Deployment
+- **Dockerfile**: Multi-stage build with Python 3.11-slim base image
+- **docker-compose.yml**: Complete stack with PostgreSQL database
+- **Health checks**: Automated container health monitoring
+- **Entrypoint script**: Database readiness checking before app start
+- **Non-root user**: Security-focused container configuration
+
+### Docker Files Structure
+- `Dockerfile` - Container build configuration
+- `docker-compose.yml` - Multi-service orchestration
+- `entrypoint.sh` - Container startup script
+- `.dockerignore` - Build context optimization
+- `.env.example` - Environment variables template
+- `docker-run.sh` - Quick deployment script
+- `test-api.sh` - API testing automation
+
 ### Production Considerations
 - ProxyFix middleware for reverse proxy deployments
 - Connection pool management with pre-ping health checks
 - Comprehensive logging configuration
 - CORS configuration for cross-origin requests
+- Container orchestration with health checks
+- Automated database initialization and migrations
 
 ## Changelog
-- June 29, 2025. Initial setup
+- June 29, 2025: Initial Flask API setup with PostgreSQL and JWT authentication
+- June 29, 2025: Added Docker containerization with complete deployment stack
+
+## Recent Changes
+- ✅ Fixed health check endpoint SQL query compatibility
+- ✅ Created complete Docker deployment configuration
+- ✅ Added Dockerfile with Python 3.11 and security best practices
+- ✅ Implemented docker-compose.yml with PostgreSQL service
+- ✅ Created deployment automation scripts (docker-run.sh, test-api.sh)
+- ✅ Added comprehensive documentation and examples
 
 ## User Preferences
 
