@@ -42,7 +42,9 @@ with app.app_context():
     
     # Import and register API routes
     from api_routes import api_bp
+    from dynamic_routes import dynamic_bp
     app.register_blueprint(api_bp)
+    app.register_blueprint(dynamic_bp)
     
     # Create all tables
     db.create_all()
@@ -64,6 +66,12 @@ def index():
     """Serve the API documentation page"""
     from flask import render_template
     return render_template('index.html')
+
+@app.route('/dynamic')
+def dynamic():
+    """Serve the dynamic database interface"""
+    from flask import render_template
+    return render_template('dynamic.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
