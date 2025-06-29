@@ -22,30 +22,20 @@ This is a RESTful API service built with Flask that provides authenticated acces
 
 ### Core Application Components
 1. **app.py**: Main Flask application factory with database initialization
-2. **models.py**: SQLAlchemy models and DatabaseManager for dynamic operations
+2. **models.py**: SQLAlchemy models for ApiToken and DataRecord entities
 3. **auth.py**: JWT authentication system with token generation/validation
 4. **api_routes.py**: RESTful API endpoints with authentication decorators
-5. **dynamic_routes.py**: Dynamic database operations with schema/table selection
-6. **main.py**: Application entry point
+5. **main.py**: Application entry point
 
 ### Database Models
 1. **ApiToken**: Manages API authentication tokens with lifecycle tracking
-2. **DataRecord**: Enhanced model with id_template field for search examples
-3. **DatabaseManager**: Static class for dynamic database operations across schemas/tables
+2. **DataRecord**: Generic data storage model with title, content, and categorization
 
 ### Authentication System
 - JWT tokens with HS256 encryption
 - Bearer token authentication via Authorization header
 - Token-based access control with decorator pattern
 - Admin token auto-creation for initial setup
-
-### Dynamic Database Features
-- **Schema browsing**: List all available database schemas
-- **Table discovery**: Explore tables within any schema
-- **Column inspection**: View detailed column information and data types
-- **Flexible search**: Find records by any column value or multiple filters
-- **CRUD operations**: Insert, update, delete data in any table
-- **Universal search endpoint**: Single API for complex queries
 
 ## Data Flow
 
@@ -127,11 +117,6 @@ This is a RESTful API service built with Flask that provides authenticated acces
 - ✅ Implemented docker-compose.yml with PostgreSQL service
 - ✅ Created deployment automation scripts (docker-run.sh, test-api.sh)
 - ✅ Added comprehensive documentation and examples
-- ✅ Implemented dynamic database API with schema/table selection
-- ✅ Added flexible search by any column values with multiple filters
-- ✅ Created web interface for dynamic database operations (/dynamic)
-- ✅ Added DatabaseManager class for universal database operations
-- ✅ Enhanced DataRecord model with id_template field for search examples
 
 ## User Preferences
 
