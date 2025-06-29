@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask API Documentation</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="text-center mb-5">
+                    <h1 class="display-4 mb-3">
+                        <i class="fas fa-database me-3"></i>
+                        Flask API Service
+                    </h1>
+                    <p class="lead">RESTful API with Bearer Token Authentication for PostgreSQL Database</p>
+                </div>
+
+                <!-- API Token Section -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-key me-2"></i>
+                            API Authentication
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="apiToken" class="form-label">Bearer Token</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="apiToken" 
+                                       placeholder="Enter your Bearer token">
+                                <button class="btn btn-outline-secondary" type="button" id="toggleToken">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-info" type="button" id="getAdminToken">
+                                    Get Admin Token
+                                </button>
+                            </div>
+                            <div class="form-text">
+                                All API endpoints require a valid Bearer token in the Authorization header.
+                                <br>
+                                <small class="text-warning">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Click "Get Admin Token" to retrieve the default admin token from the server.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- API Endpoints -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-list me-2"></i>
+                            API Endpoints
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="accordion" id="endpointsAccordion">
+                            
+                            <!-- Health Check -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                            data-bs-target="#health" aria-expanded="false">
+                                        <span class="badge bg-success me-2">GET</span>
+                                        /api/health - Health Check
+                                    </button>
+                                </h2>
+                                <div id="health" class="accordion-collapse collapse" data-bs-parent="#endpointsAccordion">
+                                    <div class="accordion-body">
+                                        <p>Check API and database health status. No authentication required.</p>
+                                        <button class="btn btn-success btn-sm" onclick="testEndpoint('GET', '/api/health', false)">
+                                            <i class="fas fa-play me-1"></i>
+                                            Test
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Get Records -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                            data-bs-target="#getRecords" aria-expanded="false">
+                                        <span class="badge bg-primary me-2">GET</span>
+                                        /api/records - Get All Records
+                                    </button>
+                                </h2>
+                                <div id="getRecords" class="accordion-collapse collapse" data-bs-parent="#endpointsAccordion">
+                                    <div class="accordion-body">
+                                        <p>Retrieve all data records with optional filtering and pagination.</p>
+                                        <h6>Query Parameters:</h6>
+                                        <ul>
+                                            <li><code>page</code> - Page number (default: 1)</li>
+                                            <li><code>per_page</code> - Records per page (default: 10, max: 100)</li>
+                                            <li><code>category</code> - Filter by category</li>
+                                            <li><code>is_active</code> - Filter by active status (true/false)</li>
+                                        </ul>
+                                        <button class="btn btn-primary btn-sm" onclick="testEndpoint('GET', '/api/records', true)">
+                                            <i class="fas fa-play me-1"></i>
+                                            Test
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Get Single Record -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                            data-bs-target="#getRecord" aria-expanded="false">
+                                        <span class="badge bg-primary me-2">GET</span>
+                                        /api/records/{id} - Get Single Record
+                                    </button>
+                                </h2>
+                                <div id="getRecord" class="accordion-collapse collapse" data-bs-parent="#endpointsAccordion">
+                                    <div class="accordion-body">
+                                        <p>Retrieve a specific record by ID.</p>
+                                        <div class="mb-2">
+                                            <input type="number" class="form-control form-control-sm" id="recordId" 
+                                                   placeholder="Record ID" style="width: 120px; display: inline-block;">
+                                        </div>
+                                        <button class="btn btn-primary btn-sm" onclick="testEndpoint('GET', '/api/records/' + document.getElementById('recordId').value, true)">
+                                            <i class="fas fa-play me-1"></i>
+                                            Test
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Create Record -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                            data-bs-target="#createRecord" aria-expanded="false">
+                                        <span class="badge bg-success me-2">POST</span>
+                                        /api/records - Create Record
+                                    </button>
+                                </h2>
+                                <div id="createRecord" class="accordion-collapse collapse" data-bs-parent="#endpointsAccordion">
+                                    <div class="accordion-body">
+                                        <p>Create a new data record.</p>
+                                        <textarea class="form-control mb-2" id="createData" rows="6" placeholder="JSON data">{
+  "title": "Sample Record",
+  "content": "This is sample content",
+  "category": "example",
+  "is_active": true
+}</textarea>
+                                        <button class="btn btn-success btn-sm" onclick="testEndpoint('POST', '/api/records', true, 'createData')">
+                                            <i class="fas fa-play me-1"></i>
+                                            Test
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Update Record -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                            data-bs-target="#updateRecord" aria-expanded="false">
+                                        <span class="badge bg-warning me-2">PUT</span>
+                                        /api/records/{id} - Update Record
+                                    </button>
+                                </h2>
+                                <div id="updateRecord" class="accordion-collapse collapse" data-bs-parent="#endpointsAccordion">
+                                    <div class="accordion-body">
+                                        <p>Update an existing record.</p>
+                                        <div class="mb-2">
+                                            <input type="number" class="form-control form-control-sm" id="updateRecordId" 
+                                                   placeholder="Record ID" style="width: 120px; display: inline-block;">
+                                        </div>
+                                        <textarea class="form-control mb-2" id="updateData" rows="6" placeholder="JSON data">{
+  "title": "Updated Record",
+  "content": "Updated content",
+  "is_active": false
+}</textarea>
+                                        <button class="btn btn-warning btn-sm" onclick="testEndpoint('PUT', '/api/records/' + document.getElementById('updateRecordId').value, true, 'updateData')">
+                                            <i class="fas fa-play me-1"></i>
+                                            Test
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Delete Record -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                            data-bs-target="#deleteRecord" aria-expanded="false">
+                                        <span class="badge bg-danger me-2">DELETE</span>
+                                        /api/records/{id} - Delete Record
+                                    </button>
+                                </h2>
+                                <div id="deleteRecord" class="accordion-collapse collapse" data-bs-parent="#endpointsAccordion">
+                                    <div class="accordion-body">
+                                        <p>Delete a record by ID.</p>
+                                        <div class="mb-2">
+                                            <input type="number" class="form-control form-control-sm" id="deleteRecordId" 
+                                                   placeholder="Record ID" style="width: 120px; display: inline-block;">
+                                        </div>
+                                        <button class="btn btn-danger btn-sm" onclick="testEndpoint('DELETE', '/api/records/' + document.getElementById('deleteRecordId').value, true)">
+                                            <i class="fas fa-play me-1"></i>
+                                            Test
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bulk Operations -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                            data-bs-target="#bulkOps" aria-expanded="false">
+                                        <span class="badge bg-info me-2">POST</span>
+                                        /api/records/bulk - Bulk Operations
+                                    </button>
+                                </h2>
+                                <div id="bulkOps" class="accordion-collapse collapse" data-bs-parent="#endpointsAccordion">
+                                    <div class="accordion-body">
+                                        <p>Perform bulk operations on multiple records.</p>
+                                        <textarea class="form-control mb-2" id="bulkData" rows="6" placeholder="JSON data">{
+  "action": "activate",
+  "record_ids": [1, 2, 3]
+}</textarea>
+                                        <small class="form-text text-muted mb-2 d-block">
+                                            Supported actions: activate, deactivate, delete
+                                        </small>
+                                        <button class="btn btn-info btn-sm" onclick="testEndpoint('POST', '/api/records/bulk', true, 'bulkData')">
+                                            <i class="fas fa-play me-1"></i>
+                                            Test
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Response Display -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-terminal me-2"></i>
+                            API Response
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="responseContainer">
+                            <div class="text-muted text-center py-4">
+                                <i class="fas fa-code fa-3x mb-3"></i>
+                                <p>Click on any "Test" button to see the API response here.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/app.js"></script>
+</body>
+</html>
