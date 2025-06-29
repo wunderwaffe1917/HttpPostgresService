@@ -52,6 +52,8 @@ def get_records():
         per_page = min(request.args.get('per_page', 10, type=int), 100)  # Max 100 per page
         category = request.args.get('category')
         is_active = request.args.get('is_active', type=bool)
+        wiki_id = request.args.get('wiki_id', type=int)
+        unit_id = request.args.get('unit_id', type=int)
         
         # Build query
         query = DataRecord.query
@@ -61,6 +63,12 @@ def get_records():
         
         if is_active is not None:
             query = query.filter(DataRecord.is_active == is_active)
+            
+        if wiki_id is not None:
+            query = query.filter(DataRecord.wiki_id == wiki_id)
+            
+        if unit_id is not None:
+            query = query.filter(DataRecord.unit_id == unit_id)
         
         # Order by creation date (newest first)
         query = query.order_by(DataRecord.created_at.desc())
@@ -137,6 +145,8 @@ def create_record():
         
         # Create record
         record = DataRecord(
+            wiki_id=data.get('wiki_id'),
+            unit_id=data.get('unit_id'),
             title=title,
             content=data.get('content', ''),
             category=data.get('category'),
@@ -185,6 +195,12 @@ def update_record(record_id):
         data = request.get_json()
         
         # Update fields if provided
+        if 'wiki_id' in data:
+            record.wiki_id = data['wiki_id']
+            
+        if 'unit_id' in data:
+            record.unit_id = data['unit_id']
+            
         if 'title' in data:
             title = data['title'].strip()
             if not title:
@@ -268,6 +284,88 @@ def delete_record(record_id):
         current_app.logger.error(f"Error deleting record {record_id}: {str(e)}")
         return jsonify({
             'error': 'Failed to delete record',
+            'message': str(e)
+        }), 500
+
+# GET /api/records/by-wiki/<wiki_id> - Get records by wiki_id
+@api_bp.route('/records/by-wiki/<int:wiki_id>', methods=['GET'])
+@require_auth
+def get_records_by_wiki(wiki_id):
+    """Get all records for a specific wiki_id"""
+    try:
+        # Get query parameters for pagination
+        page = request.args.get('page', 1, type=int)
+        per_page = min(request.args.get('per_page', 10, type=int), 100)
+        
+        # Query records by wiki_id
+        query = DataRecord.query.filter(DataRecord.wiki_id == wiki_id)
+        query = query.order_by(DataRecord.created_at.desc())
+        
+        # Paginate
+        records = query.paginate(
+            page=page, 
+            per_page=per_page, 
+            error_out=False
+        )
+        
+        return jsonify({
+            'wiki_id': wiki_id,
+            'records': [record.to_dict() for record in records.items],
+            'pagination': {
+                'page': page,
+                'per_page': per_page,
+                'total': records.total,
+                'pages': records.pages,
+                'has_next': records.has_next,
+                'has_prev': records.has_prev
+            }
+        })
+        
+    except Exception as e:
+        current_app.logger.error(f"Error getting records for wiki_id {wiki_id}: {str(e)}")
+        return jsonify({
+            'error': 'Failed to retrieve records',
+            'message': str(e)
+        }), 500
+
+# GET /api/records/by-unit/<unit_id> - Get records by unit_id
+@api_bp.route('/records/by-unit/<int:unit_id>', methods=['GET'])
+@require_auth
+def get_records_by_unit(unit_id):
+    """Get all records for a specific unit_id"""
+    try:
+        # Get query parameters for pagination
+        page = request.args.get('page', 1, type=int)
+        per_page = min(request.args.get('per_page', 10, type=int), 100)
+        
+        # Query records by unit_id
+        query = DataRecord.query.filter(DataRecord.unit_id == unit_id)
+        query = query.order_by(DataRecord.created_at.desc())
+        
+        # Paginate
+        records = query.paginate(
+            page=page, 
+            per_page=per_page, 
+            error_out=False
+        )
+        
+        return jsonify({
+            'unit_id': unit_id,
+            'records': [record.to_dict() for record in records.items],
+            'pagination': {
+                'page': page,
+                'per_page': per_page,
+                'total': records.total,
+                'pages': records.pages,
+                'has_next': records.has_next,
+                'has_prev': records.has_prev
+            }
+        })
+        
+    except Exception as e:
+        current_app.logger.error(f"Error getting records for unit_id {unit_id}: {str(e)}")
+        return jsonify({
+            'error': 'Failed to retrieve records',
             'message': str(e)
         }), 500
 

@@ -21,6 +21,8 @@ class DataRecord(db.Model):
     __tablename__ = 'data_records'
     
     id = db.Column(Integer, primary_key=True)
+    wiki_id = db.Column(Integer, nullable=True, index=True)
+    unit_id = db.Column(Integer, nullable=True, index=True)
     title = db.Column(String(200), nullable=False)
     content = db.Column(Text)
     category = db.Column(String(100))
@@ -32,6 +34,8 @@ class DataRecord(db.Model):
         """Convert model to dictionary for JSON serialization"""
         return {
             'id': self.id,
+            'wiki_id': self.wiki_id,
+            'unit_id': self.unit_id,
             'title': self.title,
             'content': self.content,
             'category': self.category,

@@ -62,14 +62,16 @@ Authorization: Bearer <your-token>
 ### Доступные endpoints:
 
 - `GET /api/health` - Проверка состояния API (без авторизации)
-- `GET /api/records` - Получить все записи
+- `GET /api/records` - Получить все записи (с фильтрацией по wiki_id, unit_id)
 - `GET /api/records/<id>` - Получить запись по ID
+- `GET /api/records/by-wiki/<wiki_id>` - Получить все записи по wiki_id
+- `GET /api/records/by-unit/<unit_id>` - Получить все записи по unit_id
 - `POST /api/records` - Создать новую запись
 - `PUT /api/records/<id>` - Обновить запись
 - `DELETE /api/records/<id>` - Удалить запись
 - `POST /api/records/bulk` - Массовые операции
 
-### Пример запроса:
+### Примеры запросов:
 
 ```bash
 # Получить все записи
@@ -77,12 +79,33 @@ curl -H "Authorization: Bearer YOUR_TOKEN" \
      -H "Content-Type: application/json" \
      http://localhost:5000/api/records
 
-# Создать новую запись
+# Получить записи по wiki_id
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+     -H "Content-Type: application/json" \
+     http://localhost:5000/api/records/by-wiki/12345
+
+# Получить записи по unit_id
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+     -H "Content-Type: application/json" \
+     http://localhost:5000/api/records/by-unit/67890
+
+# Создать новую запись с wiki_id и unit_id
 curl -X POST \
      -H "Authorization: Bearer YOUR_TOKEN" \
      -H "Content-Type: application/json" \
-     -d '{"title": "Новая запись", "content": "Содержимое", "category": "example"}' \
+     -d '{
+       "wiki_id": 12345,
+       "unit_id": 67890,
+       "title": "Новая запись",
+       "content": "Содержимое",
+       "category": "example"
+     }' \
      http://localhost:5000/api/records
+
+# Фильтрация записей по wiki_id в общем endpoint
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+     -H "Content-Type: application/json" \
+     "http://localhost:5000/api/records?wiki_id=12345&page=1&per_page=20"
 ```
 
 ## Веб-интерфейс
@@ -131,6 +154,8 @@ INFO:app:Created admin token: <token-value>
 
 ### DataRecord
 - `id` - Уникальный идентификатор
+- `wiki_id` - Идентификатор wiki (integer, индексированное поле)
+- `unit_id` - Идентификатор unit (integer, индексированное поле)
 - `title` - Заголовок (обязательно)
 - `content` - Содержимое
 - `category` - Категория

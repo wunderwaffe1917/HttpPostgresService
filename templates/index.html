@@ -99,6 +99,8 @@
                                         <ul>
                                             <li><code>page</code> - Page number (default: 1)</li>
                                             <li><code>per_page</code> - Records per page (default: 10, max: 100)</li>
+                                            <li><code>wiki_id</code> - Filter by wiki ID</li>
+                                            <li><code>unit_id</code> - Filter by unit ID</li>
                                             <li><code>category</code> - Filter by category</li>
                                             <li><code>is_active</code> - Filter by active status (true/false)</li>
                                         </ul>
@@ -146,7 +148,9 @@
                                 <div id="createRecord" class="accordion-collapse collapse" data-bs-parent="#endpointsAccordion">
                                     <div class="accordion-body">
                                         <p>Create a new data record.</p>
-                                        <textarea class="form-control mb-2" id="createData" rows="6" placeholder="JSON data">{
+                                        <textarea class="form-control mb-2" id="createData" rows="8" placeholder="JSON data">{
+  "wiki_id": 12345,
+  "unit_id": 67890,
   "title": "Sample Record",
   "content": "This is sample content",
   "category": "example",
@@ -176,7 +180,9 @@
                                             <input type="number" class="form-control form-control-sm" id="updateRecordId" 
                                                    placeholder="Record ID" style="width: 120px; display: inline-block;">
                                         </div>
-                                        <textarea class="form-control mb-2" id="updateData" rows="6" placeholder="JSON data">{
+                                        <textarea class="form-control mb-2" id="updateData" rows="8" placeholder="JSON data">{
+  "wiki_id": 54321,
+  "unit_id": 98765,
   "title": "Updated Record",
   "content": "Updated content",
   "is_active": false
